@@ -17,8 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake devscripts debhelper libgtest-dev libgmock-dev googletest
-        sudo apt-get install -y google-mock
+        sudo apt-get install -y build-essential cmake devscripts debhelper libgtest-dev libgmock-dev
         cd /usr/src/googletest
         sudo cmake CMakeLists.txt
         sudo make
@@ -26,6 +25,7 @@ jobs:
 
     - name: Configure and build project
       run: |
+        rm -rf build
         mkdir build
         cd build
         cmake ..
@@ -56,7 +56,7 @@ jobs:
         Maintainer: Your Name <you@example.com>
         Description: Adapter Design Pattern Implementation
          Example application demonstrating the Adapter pattern.
-        Depends: libc6 (>= 2.23), libgtest-dev
+        Depends: libc6 (>= 2.23)
         EOF
 
     - name: Build DEB package

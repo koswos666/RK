@@ -1,2 +1,2 @@
-adapter_tests 1 0.0117418
+adapter_tests 1 0.0217269
 ---
