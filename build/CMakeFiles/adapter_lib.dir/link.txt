@@ -1,0 +1,2 @@
+/usr/bin/ar qc libadapter_lib.a CMakeFiles/adapter_lib.dir/Adapter_Design_Pattern/CrappyArrayInventory.cpp.o CMakeFiles/adapter_lib.dir/Adapter_Design_Pattern/ModernInventory.cpp.o
+/usr/bin/ranlib libadapter_lib.a

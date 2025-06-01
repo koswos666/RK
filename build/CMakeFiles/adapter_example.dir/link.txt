@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/adapter_example.dir/Adapter_Design_Pattern/main.cpp.o -o adapter_example  libadapter_lib.a 

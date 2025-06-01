@@ -1,0 +1,70 @@
+name: Build, Test and Package
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake devscripts debhelper libgtest-dev googletest
+        # Сборка и установка GTest
+        cd /usr/src/gtest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp *.a /usr/lib
+        sudo ldconfig
+
+    - name: Configure and build project
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        make -j4
+
+    - name: Run tests
+      run: |
+        cd build
+        ctest --output-on-failure --verbose
+
+    - name: Create DEB package structure
+      run: |
+        mkdir -p adapter-pkg/usr/bin
+        mkdir -p adapter-pkg/DEBIAN
+        
+        # Копируем основной исполняемый файл
+        cp build/adapter_example adapter-pkg/usr/bin/
+        
+        # Создаем файл control
+        cat > adapter-pkg/DEBIAN/control <<EOF
+        Package: adapter-pattern
+        Version: 1.0
+        Section: utils
+        Priority: optional
+        Architecture: amd64
+        Maintainer: Your Name <you@example.com>
+        Description: Adapter Design Pattern Implementation
+         Example application demonstrating the Adapter pattern.
+        Depends: libgtest-dev, libc6 (>= 2.23)
+        EOF
+
+    - name: Build DEB package
+      run: |
+        dpkg-deb --build adapter-pkg
+        mv adapter-pkg.deb adapter-pattern_1.0_amd64.deb
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: adapter-pattern-package
+        path: adapter-pattern_1.0_amd64.deb
