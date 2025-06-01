@@ -1,6 +1,0 @@
-/home/vboxuser/RK/build/CMakeFiles/adapter_lib.dir
-/home/vboxuser/RK/build/CMakeFiles/adapter_example.dir
-/home/vboxuser/RK/build/CMakeFiles/adapter_tests.dir
-/home/vboxuser/RK/build/CMakeFiles/test.dir
-/home/vboxuser/RK/build/CMakeFiles/edit_cache.dir
-/home/vboxuser/RK/build/CMakeFiles/rebuild_cache.dir
