@@ -17,13 +17,12 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake devscripts debhelper libgtest-dev googletest
-        # Сборка и установка GTest
-        cd /usr/src/gtest
+        sudo apt-get install -y build-essential cmake devscripts debhelper libgtest-dev libgmock-dev googletest
+        sudo apt-get install -y google-mock
+        cd /usr/src/googletest
         sudo cmake CMakeLists.txt
         sudo make
-        sudo cp *.a /usr/lib
-        sudo ldconfig
+        sudo make install
 
     - name: Configure and build project
       run: |
@@ -31,6 +30,12 @@ jobs:
         cd build
         cmake ..
         make -j4
+
+    - name: Verify build artifacts
+      run: |
+        ls -la build
+        test -f build/adapter_example
+        test -f build/adapter_tests
 
     - name: Run tests
       run: |
@@ -41,11 +46,7 @@ jobs:
       run: |
         mkdir -p adapter-pkg/usr/bin
         mkdir -p adapter-pkg/DEBIAN
-        
-        # Копируем основной исполняемый файл
         cp build/adapter_example adapter-pkg/usr/bin/
-        
-        # Создаем файл control
         cat > adapter-pkg/DEBIAN/control <<EOF
         Package: adapter-pattern
         Version: 1.0
@@ -55,7 +56,7 @@ jobs:
         Maintainer: Your Name <you@example.com>
         Description: Adapter Design Pattern Implementation
          Example application demonstrating the Adapter pattern.
-        Depends: libgtest-dev, libc6 (>= 2.23)
+        Depends: libc6 (>= 2.23), libgtest-dev
         EOF
 
     - name: Build DEB package
@@ -64,7 +65,7 @@ jobs:
         mv adapter-pkg.deb adapter-pattern_1.0_amd64.deb
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: adapter-pattern-package
         path: adapter-pattern_1.0_amd64.deb
